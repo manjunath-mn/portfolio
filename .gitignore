@@ -39,3 +39,22 @@ yarn-error.log*
 # typescript
 *.tsbuildinfo
 next-env.d.ts
+
+# editors & IDEs
+.vscode/
+.idea/
+*.swp
+*.swo
+*~
+
+# OS
+Thumbs.db
+
+# claude code
+.claude/
+
+# local env overrides
+.env.local
+.env.development.local
+.env.test.local
+.env.production.local
