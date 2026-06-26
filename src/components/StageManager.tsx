@@ -21,6 +21,7 @@ const SectionIcon = ({ id, size = 14 }: { id: string; size?: number }) => {
 
 const Root = styled.div`
   display: flex;
+  flex-direction: row;
   height: 100vh;
   width: 100%;
   overflow: hidden;
@@ -28,6 +29,19 @@ const Root = styled.div`
   padding: 1.5rem;
   gap: 1.5rem;
   box-sizing: border-box;
+
+  @media (max-width: 1024px) {
+    flex-direction: column;
+    padding: 1rem;
+    gap: 1rem;
+    height: auto;
+    min-height: 100vh;
+  }
+
+  @media (max-width: 640px) {
+    padding: 0.75rem;
+    gap: 0.75rem;
+  }
 `;
 
 const ThumbnailStack = styled(motion.div)`
@@ -38,6 +52,29 @@ const ThumbnailStack = styled(motion.div)`
   gap: 1rem;
   perspective: 700px;
   perspective-origin: right center;
+
+  @media (max-width: 1024px) {
+    flex-direction: row;
+    width: 100%;
+    gap: 0.75rem;
+    overflow-x: auto;
+    padding-bottom: 0.5rem;
+
+    &::-webkit-scrollbar {
+      height: 4px;
+    }
+    &::-webkit-scrollbar-track {
+      background: transparent;
+    }
+    &::-webkit-scrollbar-thumb {
+      background: rgba(255, 255, 255, 0.2);
+      border-radius: 2px;
+    }
+  }
+
+  @media (max-width: 640px) {
+    gap: 0.5rem;
+  }
 `;
 
 const Thumbnail = styled(motion.button)<{ $active: boolean; $accent: string }>`
@@ -59,6 +96,17 @@ const Thumbnail = styled(motion.button)<{ $active: boolean; $accent: string }>`
     $active
       ? `0 0 0 1px ${$accent}33, 4px 4px 20px rgba(0,0,0,0.6), inset -2px 0 6px rgba(0,0,0,0.3)`
       : "4px 4px 16px rgba(0,0,0,0.5), inset -2px 0 6px rgba(0,0,0,0.3)"};
+  flex-shrink: 0;
+
+  @media (max-width: 1024px) {
+    min-width: 9rem;
+  }
+
+  @media (max-width: 640px) {
+    min-width: 8rem;
+    aspect-ratio: 3 / 2;
+    padding: 0.5rem;
+  }
 `;
 
 const ThumbnailTop = styled.div`
@@ -95,6 +143,14 @@ const Stage = styled(motion.div)`
   perspective: 1200px;
   perspective-origin: left center;
   min-width: 0;
+
+  @media (max-width: 1024px) {
+    min-height: 400px;
+  }
+
+  @media (max-width: 640px) {
+    min-height: 350px;
+  }
 `;
 
 const Window = styled(motion.div)`
@@ -157,6 +213,10 @@ const TitleBarRight = styled.div`
   width: 4.5rem;
   display: flex;
   justify-content: flex-end;
+
+  @media (max-width: 768px) {
+    width: auto;
+  }
 `;
 
 const ExpandBtn = styled.button`
@@ -176,6 +236,11 @@ const ExpandBtn = styled.button`
     background: rgba(255, 255, 255, 0.12);
     color: #d4d4d8;
   }
+
+  @media (max-width: 640px) {
+    padding: 0.2rem 0.4rem;
+    font-size: 0.625rem;
+  }
 `;
 
 const ContentArea = styled(motion.div)<{ $expanded: boolean }>`
@@ -191,6 +256,21 @@ const ContentArea = styled(motion.div)<{ $expanded: boolean }>`
   &::-webkit-scrollbar-thumb {
     background: rgba(255, 255, 255, 0.15);
     border-radius: 3px;
+  }
+
+  @media (max-width: 1024px) {
+    padding: ${({ $expanded }) => ($expanded ? "2rem 2.5rem" : "1.5rem")};
+    font-size: ${({ $expanded }) => ($expanded ? "1rem" : "0.95rem")};
+  }
+
+  @media (max-width: 768px) {
+    padding: ${({ $expanded }) => ($expanded ? "1.5rem 2rem" : "1.25rem")};
+    font-size: 0.95rem;
+  }
+
+  @media (max-width: 640px) {
+    padding: ${({ $expanded }) => ($expanded ? "1rem 1.25rem" : "1rem")};
+    font-size: 0.9rem;
   }
 `;
 

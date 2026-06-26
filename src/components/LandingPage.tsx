@@ -20,6 +20,16 @@ const Root = styled.div`
   height: 100%;
   padding: 2rem;
   animation: ${fadeUp} 0.45s ease both;
+
+  @media (max-width: 768px) {
+    padding: 1.5rem;
+  }
+
+  @media (max-width: 640px) {
+    padding: 1rem;
+    justify-content: flex-start;
+    padding-top: 2rem;
+  }
 `;
 
 const Card = styled.div`
@@ -29,6 +39,11 @@ const Card = styled.div`
   gap: 1.5rem;
   max-width: 480px;
   width: 100%;
+
+  @media (max-width: 640px) {
+    gap: 1.25rem;
+    max-width: 100%;
+  }
 `;
 
 const AvatarRing = styled.div`
@@ -38,6 +53,18 @@ const AvatarRing = styled.div`
   border-radius: 50%;
   background: linear-gradient(135deg, #0a84ff, #bf5af2);
   padding: 4px;
+
+  @media (max-width: 768px) {
+    width: 112px;
+    height: 112px;
+    padding: 3px;
+  }
+
+  @media (max-width: 640px) {
+    width: 96px;
+    height: 96px;
+    padding: 3px;
+  }
 `;
 
 const AvatarInner = styled.img`
@@ -58,12 +85,28 @@ const Name = styled.h1`
   color: #f4f4f5;
   margin: 0 0 0.25rem;
   letter-spacing: -0.02em;
+
+  @media (max-width: 768px) {
+    font-size: 1.625rem;
+  }
+
+  @media (max-width: 640px) {
+    font-size: 1.375rem;
+  }
 `;
 
 const Title = styled.p`
   font-size: 0.9375rem;
   color: #a1a1aa;
   margin: 0;
+
+  @media (max-width: 768px) {
+    font-size: 0.875rem;
+  }
+
+  @media (max-width: 640px) {
+    font-size: 0.8125rem;
+  }
 `;
 
 const Divider = styled.div`
@@ -99,11 +142,22 @@ const ContactItem = styled.a`
     flex-shrink: 0;
     color: #71717a;
   }
+
+  @media (max-width: 640px) {
+    font-size: 0.8125rem;
+    padding: 0.375rem 0.625rem;
+  }
 `;
 
 const SocialRow = styled.div`
   display: flex;
   gap: 0.75rem;
+
+  @media (max-width: 640px) {
+    gap: 0.5rem;
+    flex-wrap: wrap;
+    justify-content: center;
+  }
 `;
 
 const SocialBtn = styled.a`
@@ -125,6 +179,11 @@ const SocialBtn = styled.a`
     border-color: rgba(255, 255, 255, 0.2);
     color: #f4f4f5;
   }
+
+  @media (max-width: 640px) {
+    padding: 0.375rem 0.875rem;
+    font-size: 0.75rem;
+  }
 `;
 
 const Divider2 = styled.div`
@@ -140,6 +199,10 @@ const Hint = styled.p`
   align-items: center;
   gap: 0.375rem;
   margin: 0;
+
+  @media (max-width: 640px) {
+    font-size: 0.75rem;
+  }
 `;
 
 const SectionPills = styled.div`
@@ -147,6 +210,10 @@ const SectionPills = styled.div`
   gap: 0.5rem;
   flex-wrap: wrap;
   justify-content: center;
+
+  @media (max-width: 640px) {
+    gap: 0.375rem;
+  }
 `;
 
 const SectionPill = styled.button<{ $accent: string }>`
@@ -163,6 +230,11 @@ const SectionPill = styled.button<{ $accent: string }>`
   &:hover {
     background: ${({ $accent }) => $accent}30;
     border-color: ${({ $accent }) => $accent}99;
+  }
+
+  @media (max-width: 640px) {
+    padding: 0.25rem 0.75rem;
+    font-size: 0.75rem;
   }
 `;
 
