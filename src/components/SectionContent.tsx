@@ -15,6 +15,16 @@ const SectionHeading = styled.h2`
   display: flex;
   align-items: center;
   gap: 0.5rem;
+
+  @media (max-width: 768px) {
+    font-size: 1.5em;
+    margin: 0 0 1.5rem;
+  }
+
+  @media (max-width: 640px) {
+    font-size: 1.25em;
+    margin: 0 0 1rem;
+  }
 `;
 
 const Body = styled.p`
@@ -22,6 +32,14 @@ const Body = styled.p`
   line-height: 1.75;
   color: #a1a1aa;
   margin: 0 0 1rem;
+
+  @media (max-width: 768px) {
+    font-size: 0.95em;
+  }
+
+  @media (max-width: 640px) {
+    font-size: 0.9em;
+  }
 `;
 
 /* ── About ───────────────────────────────────────── */
@@ -89,6 +107,18 @@ const TimelineRoot = styled.div`
     );
     border-radius: 1px;
   }
+
+  @media (max-width: 768px) {
+    padding-left: 2.5rem;
+  }
+
+  @media (max-width: 640px) {
+    padding-left: 2rem;
+
+    &::before {
+      left: 0.75rem;
+    }
+  }
 `;
 
 const TimelineItem = styled.div`
@@ -111,6 +141,19 @@ const TimelineDot = styled.div<{ $color: string }>`
   border: 2px solid #09090b;
   box-shadow: 0 0 0 2px ${({ $color }) => $color}55;
   z-index: 1;
+
+  @media (max-width: 768px) {
+    left: -2.375rem;
+    width: 0.625rem;
+    height: 0.625rem;
+  }
+
+  @media (max-width: 640px) {
+    left: -1.875rem;
+    width: 0.5rem;
+    height: 0.5rem;
+    border-width: 1.5px;
+  }
 `;
 
 const TimelineYear = styled.div`
@@ -125,6 +168,15 @@ const TimelineYear = styled.div`
   white-space: nowrap;
   transform: translateX(-50%);
   text-align: center;
+
+  @media (max-width: 768px) {
+    left: -2.75rem;
+    font-size: 0.625rem;
+  }
+
+  @media (max-width: 640px) {
+    display: none;
+  }
 `;
 
 const TimelineCard = styled.div`
@@ -139,6 +191,17 @@ const TimelineCard = styled.div`
   &:hover {
     border-color: #52525b;
     background: rgba(63, 63, 70, 0.4);
+  }
+
+  @media (max-width: 768px) {
+    gap: 1rem;
+    padding: 1rem 1.125rem;
+  }
+
+  @media (max-width: 640px) {
+    flex-direction: column;
+    gap: 0.75rem;
+    padding: 0.875rem 1rem;
   }
 `;
 
@@ -155,6 +218,16 @@ const LogoWrapper = styled.div<{ $bg: string }>`
   display: flex;
   align-items: center;
   justify-content: center;
+
+  @media (max-width: 768px) {
+    width: 64px;
+    height: 64px;
+  }
+
+  @media (max-width: 640px) {
+    width: 56px;
+    height: 56px;
+  }
 `;
 
 const LogoImg = styled.img`
@@ -197,6 +270,14 @@ const EntryRole = styled.h3`
   color: #f4f4f5;
   margin: 0 0 0.125rem;
   line-height: 1.3;
+
+  @media (max-width: 768px) {
+    font-size: 0.95em;
+  }
+
+  @media (max-width: 640px) {
+    font-size: 0.9em;
+  }
 `;
 
 const EntryMeta = styled.div`
@@ -260,8 +341,9 @@ const ProjectsGrid = styled.div`
   grid-template-columns: repeat(2, 1fr);
   gap: 1rem;
 
-  @media (max-width: 600px) {
+  @media (max-width: 768px) {
     grid-template-columns: 1fr;
+    gap: 0.75rem;
   }
 `;
 
@@ -270,6 +352,10 @@ const ProjectCard = styled.div`
   border: 1px solid #3f3f46;
   background: rgba(39, 39, 42, 0.5);
   padding: 1rem;
+
+  @media (max-width: 640px) {
+    padding: 0.875rem;
+  }
 `;
 
 const ProjectName = styled.h3`
@@ -280,6 +366,14 @@ const ProjectName = styled.h3`
   display: flex;
   align-items: center;
   gap: 0.375rem;
+
+  @media (max-width: 768px) {
+    font-size: 0.95em;
+  }
+
+  @media (max-width: 640px) {
+    font-size: 0.9em;
+  }
 `;
 
 const ProjectDescription = styled.p`
@@ -287,6 +381,10 @@ const ProjectDescription = styled.p`
   line-height: 1.6;
   color: #a1a1aa;
   margin: 0 0 0.75rem;
+
+  @media (max-width: 640px) {
+    font-size: 0.8em;
+  }
 `;
 
 /* ── Data ────────────────────────────────────────── */
