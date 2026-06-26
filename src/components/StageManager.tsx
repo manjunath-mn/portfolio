@@ -2,74 +2,367 @@
 
 import { useState } from "react";
 import { AnimatePresence, motion } from "framer-motion";
+import styled from "styled-components";
+import { User, Briefcase, GraduationCap, Code2, Minimize2, Maximize2, X } from "lucide-react";
 import { sections } from "@/data/sections";
 import { SectionContent } from "./SectionContent";
+import { LandingPage } from "./LandingPage";
+
+/* ── Icons map ─────────────────────────────────── */
+const SectionIcon = ({ id, size = 14 }: { id: string; size?: number }) => {
+  if (id === "about")      return <User size={size} />;
+  if (id === "experience") return <Briefcase size={size} />;
+  if (id === "education")  return <GraduationCap size={size} />;
+  if (id === "projects")   return <Code2 size={size} />;
+  return null;
+};
+
+/* ── Styled components ─────────────────────────── */
+
+const Root = styled.div`
+  display: flex;
+  height: 100vh;
+  width: 100%;
+  overflow: hidden;
+  background: linear-gradient(135deg, #18181b 0%, #09090b 60%, #000000 100%);
+  padding: 1.5rem;
+  gap: 1.5rem;
+  box-sizing: border-box;
+`;
+
+const ThumbnailStack = styled(motion.div)`
+  display: flex;
+  width: 11rem;
+  flex-shrink: 0;
+  flex-direction: column;
+  gap: 1rem;
+  perspective: 700px;
+  perspective-origin: right center;
+`;
+
+const Thumbnail = styled(motion.button)<{ $active: boolean; $accent: string }>`
+  display: flex;
+  aspect-ratio: 4 / 3;
+  flex-direction: column;
+  justify-content: space-between;
+  border-radius: 0.75rem;
+  border: 1px solid ${({ $active, $accent }) =>
+    $active ? $accent : "rgba(255,255,255,0.12)"};
+  background: ${({ $active }) =>
+    $active ? "rgba(63,63,70,0.85)" : "rgba(39,39,42,0.65)"};
+  padding: 0.75rem;
+  text-align: left;
+  cursor: pointer;
+  backdrop-filter: blur(12px);
+  transform-style: preserve-3d;
+  box-shadow: ${({ $active, $accent }) =>
+    $active
+      ? `0 0 0 1px ${$accent}33, 4px 4px 20px rgba(0,0,0,0.6), inset -2px 0 6px rgba(0,0,0,0.3)`
+      : "4px 4px 16px rgba(0,0,0,0.5), inset -2px 0 6px rgba(0,0,0,0.3)"};
+`;
+
+const ThumbnailTop = styled.div`
+  display: flex;
+  align-items: center;
+  gap: 0.375rem;
+`;
+
+const AccentDot = styled.div<{ $color: string }>`
+  width: 0.45rem;
+  height: 0.45rem;
+  border-radius: 50%;
+  background-color: ${({ $color }) => $color};
+  flex-shrink: 0;
+`;
+
+const ThumbnailTitle = styled.p`
+  margin: 0;
+  font-size: 0.875rem;
+  font-weight: 500;
+  color: #f4f4f5;
+`;
+
+const ThumbnailSubtitle = styled.p`
+  margin: 0;
+  font-size: 0.6875rem;
+  color: #71717a;
+  margin-top: 0.125rem;
+`;
+
+const Stage = styled(motion.div)`
+  position: relative;
+  flex: 1;
+  perspective: 1200px;
+  perspective-origin: left center;
+  min-width: 0;
+`;
+
+const Window = styled(motion.div)`
+  position: absolute;
+  inset: 0;
+  display: flex;
+  flex-direction: column;
+  overflow: hidden;
+  border-radius: 1rem;
+  border: 1px solid rgba(255, 255, 255, 0.1);
+  background: rgba(24, 24, 27, 0.9);
+  box-shadow: 0 25px 60px rgba(0, 0, 0, 0.6);
+  backdrop-filter: blur(20px);
+`;
+
+const TitleBar = styled.div`
+  display: flex;
+  align-items: center;
+  gap: 0.5rem;
+  border-bottom: 1px solid rgba(255, 255, 255, 0.08);
+  padding: 0.6875rem 1.25rem;
+  flex-shrink: 0;
+  user-select: none;
+`;
+
+const TrafficBtn = styled.button<{ $color: string }>`
+  width: 0.75rem;
+  height: 0.75rem;
+  border-radius: 50%;
+  background-color: ${({ $color }) => $color};
+  border: none;
+  padding: 0;
+  cursor: pointer;
+  opacity: 0.85;
+  flex-shrink: 0;
+  transition: opacity 0.15s ease, filter 0.15s ease;
+
+  &:hover {
+    opacity: 1;
+    filter: brightness(1.15);
+  }
+`;
+
+const TitleBarCenter = styled.div`
+  flex: 1;
+  display: flex;
+  align-items: center;
+  justify-content: center;
+  gap: 0.375rem;
+  color: #a1a1aa;
+`;
+
+const WindowTitle = styled.span`
+  font-size: 0.8125rem;
+  font-weight: 500;
+  color: #d4d4d8;
+`;
+
+const TitleBarRight = styled.div`
+  width: 4.5rem;
+  display: flex;
+  justify-content: flex-end;
+`;
+
+const ExpandBtn = styled.button`
+  display: flex;
+  align-items: center;
+  gap: 0.25rem;
+  padding: 0.25rem 0.5rem;
+  border-radius: 0.375rem;
+  border: 1px solid rgba(255, 255, 255, 0.1);
+  background: rgba(255, 255, 255, 0.06);
+  color: #71717a;
+  font-size: 0.6875rem;
+  cursor: pointer;
+  transition: background 0.15s, color 0.15s;
+
+  &:hover {
+    background: rgba(255, 255, 255, 0.12);
+    color: #d4d4d8;
+  }
+`;
+
+const ContentArea = styled(motion.div)<{ $expanded: boolean }>`
+  flex: 1;
+  overflow-y: auto;
+  padding: ${({ $expanded }) => ($expanded ? "3rem 4rem" : "2rem")};
+  color: #f4f4f5;
+  font-size: ${({ $expanded }) => ($expanded ? "1.125rem" : "1rem")};
+  transition: font-size 0.3s ease, padding 0.3s ease;
+
+  &::-webkit-scrollbar { width: 6px; }
+  &::-webkit-scrollbar-track { background: transparent; }
+  &::-webkit-scrollbar-thumb {
+    background: rgba(255, 255, 255, 0.15);
+    border-radius: 3px;
+  }
+`;
+
+const LandingWindow = styled(motion.div)`
+  position: absolute;
+  inset: 0;
+  border-radius: 1rem;
+  border: 1px solid rgba(255, 255, 255, 0.07);
+  background: rgba(24, 24, 27, 0.6);
+  backdrop-filter: blur(20px);
+  overflow: hidden;
+`;
+
+const windowVariants = {
+  enter: (direction: number) => ({
+    opacity: 0,
+    x: direction > 0 ? 72 : -72,
+    y: 10,
+    scale: 0.92,
+    rotateY: direction > 0 ? -10 : 10,
+    filter: "blur(6px)",
+  }),
+  center: {
+    opacity: 1,
+    x: 0,
+    y: 0,
+    scale: 1,
+    rotateY: 0,
+    filter: "blur(0px)",
+  },
+  exit: (direction: number) => ({
+    opacity: 0,
+    x: direction > 0 ? -56 : 56,
+    y: -6,
+    scale: 0.96,
+    rotateY: direction > 0 ? 8 : -8,
+    filter: "blur(4px)",
+  }),
+};
+
+/* ── Component ─────────────────────────────────── */
 
 export function StageManager() {
-  const [activeId, setActiveId] = useState(sections[0].id);
-  const activeSection = sections.find((s) => s.id === activeId)!;
-  const otherSections = sections.filter((s) => s.id !== activeId);
+  const [activeId, setActiveId] = useState<string | null>("about");
+  const [isExpanded, setIsExpanded] = useState(false);
+  const [transitionDirection, setTransitionDirection] = useState(1);
+
+  const activeSection = sections.find((s) => s.id === activeId) ?? null;
+
+  const handleOpenSection = (id: string) => {
+    const nextIndex = sections.findIndex((section) => section.id === id);
+    const currentIndex = activeId ? sections.findIndex((section) => section.id === activeId) : -1;
+
+    setTransitionDirection(nextIndex >= currentIndex ? 1 : -1);
+    setActiveId(id);
+  };
+
+  const handleClose = () => {
+    setActiveId(null);
+    setIsExpanded(false);
+  };
+
+  const handleExpand = () => setIsExpanded((v) => !v);
 
   return (
-    <div className="flex h-screen w-full gap-6 overflow-hidden bg-gradient-to-br from-zinc-900 via-zinc-950 to-black p-6">
-      {/* Thumbnail stack */}
-      <div className="flex w-40 flex-col gap-4 sm:w-48">
-        {otherSections.map((section) => (
-          <motion.button
-            key={section.id}
-            layoutId={`window-${section.id}`}
-            onClick={() => setActiveId(section.id)}
-            className="flex aspect-[4/3] flex-col justify-between rounded-xl border border-white/10 bg-zinc-800/60 p-3 text-left shadow-lg backdrop-blur-md transition-colors hover:bg-zinc-700/60"
-            whileHover={{ scale: 1.04 }}
-            whileTap={{ scale: 0.97 }}
-            transition={{ type: "spring", stiffness: 300, damping: 28 }}
+    <Root>
+      {/* Thumbnail stack — slides out on expand */}
+      <AnimatePresence initial={false}>
+        {!isExpanded && (
+          <ThumbnailStack
+            key="stack"
+            initial={{ x: -220, opacity: 0 }}
+            animate={{ x: 0, opacity: 1 }}
+            exit={{ x: -220, opacity: 0 }}
+            transition={{ type: "spring", stiffness: 320, damping: 32 }}
           >
-            <div
-              className="h-2 w-2 rounded-full"
-              style={{ backgroundColor: section.accent }}
-            />
-            <div>
-              <p className="text-sm font-medium text-zinc-100">{section.title}</p>
-              <p className="text-xs text-zinc-400">{section.subtitle}</p>
-            </div>
-          </motion.button>
-        ))}
-      </div>
+            {sections.map((section) => {
+              const isActive = section.id === activeId;
+              return (
+                <Thumbnail
+                  key={section.id}
+                  $active={isActive}
+                  $accent={section.accent}
+                  onClick={() => handleOpenSection(section.id)}
+                  initial={{ rotateY: 14 }}
+                  animate={{
+                    rotateY: 14,
+                    scale: isActive ? 1.055 : 1,
+                    x: isActive ? 3 : 0,
+                    y: isActive ? -2 : 0,
+                  }}
+                  whileHover={isActive ? {} : { rotateY: 9, scale: 1.03 }}
+                  whileTap={isActive ? {} : { scale: 0.97, rotateY: 2 }}
+                  transition={{ type: "spring", stiffness: 340, damping: 24 }}
+                >
+                  <ThumbnailTop>
+                    <AccentDot $color={section.accent} />
+                    <span style={{ color: section.accent, opacity: 0.8 }}>
+                      <SectionIcon id={section.id} size={12} />
+                    </span>
+                  </ThumbnailTop>
+                  <div>
+                    <ThumbnailTitle>{section.title}</ThumbnailTitle>
+                    <ThumbnailSubtitle>{section.subtitle}</ThumbnailSubtitle>
+                  </div>
+                </Thumbnail>
+              );
+            })}
+          </ThumbnailStack>
+        )}
+      </AnimatePresence>
 
-      {/* Main stage */}
-      <div className="relative flex-1">
-        <AnimatePresence mode="popLayout">
-          <motion.div
-            key={activeSection.id}
-            layoutId={`window-${activeSection.id}`}
-            className="absolute inset-0 flex flex-col overflow-hidden rounded-2xl border border-white/10 bg-zinc-900/80 shadow-2xl backdrop-blur-xl"
-            transition={{ type: "spring", stiffness: 280, damping: 30 }}
-          >
-            <div className="flex items-center gap-2 border-b border-white/10 px-5 py-3">
-              <span className="h-3 w-3 rounded-full bg-red-500/80" />
-              <span className="h-3 w-3 rounded-full bg-yellow-500/80" />
-              <span className="h-3 w-3 rounded-full bg-green-500/80" />
-              <span
-                className="ml-3 h-2 w-2 rounded-full"
-                style={{ backgroundColor: activeSection.accent }}
-              />
-              <span className="text-sm font-medium text-zinc-300">
-                {activeSection.title}
-              </span>
-            </div>
-            <motion.div
-              key={`content-${activeSection.id}`}
-              initial={{ opacity: 0, y: 12 }}
-              animate={{ opacity: 1, y: 0 }}
-              exit={{ opacity: 0, y: -12 }}
-              transition={{ duration: 0.25, ease: "easeOut" }}
-              className="flex-1 overflow-y-auto p-8 text-zinc-100"
+      {/* Main stage — expands smoothly as stack exits */}
+      <Stage layout transition={{ type: "spring", stiffness: 280, damping: 30 }}>
+        <AnimatePresence mode="wait" initial={false} custom={transitionDirection}>
+          {activeSection ? (
+            <Window
+              key={activeSection.id}
+              custom={transitionDirection}
+              variants={windowVariants}
+              initial="enter"
+              animate="center"
+              exit="exit"
+              transition={{ type: "spring", stiffness: 240, damping: 24, mass: 0.9 }}
             >
-              <SectionContent section={activeSection} />
-            </motion.div>
-          </motion.div>
+              <TitleBar>
+                {/* Traffic lights */}
+                <TrafficBtn $color="#ff5f57" onClick={handleClose} title="Close" />
+                <TrafficBtn $color="#febc2e" title="Minimise" />
+                <TrafficBtn $color="#28c840" onClick={handleExpand} title="Expand" />
+
+                {/* Centred title */}
+                <TitleBarCenter>
+                  <span style={{ color: activeSection.accent }}>
+                    <SectionIcon id={activeSection.id} size={13} />
+                  </span>
+                  <WindowTitle>{activeSection.title}</WindowTitle>
+                </TitleBarCenter>
+
+                {/* Expand / collapse button */}
+                <TitleBarRight>
+                  <ExpandBtn onClick={handleExpand}>
+                    {isExpanded ? <Minimize2 size={11} /> : <Maximize2 size={11} />}
+                    {isExpanded ? "Collapse" : "Expand"}
+                  </ExpandBtn>
+                </TitleBarRight>
+              </TitleBar>
+
+              <ContentArea
+                key={`content-${activeSection.id}`}
+                $expanded={isExpanded}
+                initial={{ opacity: 0, y: 18, scale: 0.985 }}
+                animate={{ opacity: 1, y: 0, scale: 1 }}
+                exit={{ opacity: 0, y: -14, scale: 0.985 }}
+                transition={{ type: "spring", stiffness: 260, damping: 28 }}
+              >
+                <SectionContent section={activeSection} expanded={isExpanded} />
+              </ContentArea>
+            </Window>
+          ) : (
+            <LandingWindow
+              key="landing"
+              initial={{ opacity: 0, scale: 0.97 }}
+              animate={{ opacity: 1, scale: 1 }}
+              exit={{ opacity: 0, scale: 0.97 }}
+              transition={{ duration: 0.3, ease: "easeOut" }}
+            >
+              <LandingPage onOpenSection={handleOpenSection} />
+            </LandingWindow>
+          )}
         </AnimatePresence>
-      </div>
-    </div>
+      </Stage>
+    </Root>
   );
 }
