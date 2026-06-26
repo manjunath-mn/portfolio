@@ -289,7 +289,7 @@ export function StageManager() {
                   <ThumbnailTop>
                     <AccentDot $color={section.accent} />
                     <span style={{ color: section.accent, opacity: 0.8 }}>
-                      <SectionIcon id={section.id} size={12} />
+                      <SectionIcon id={section.id} size={48} />
                     </span>
                   </ThumbnailTop>
                   <div>
